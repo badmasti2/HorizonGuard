@@ -37,4 +37,4 @@ HorizonGuard is distributed as a compiled Windows plugin. The source is kept pri
 
 These are whole-server measurements from earlier native development builds. TPS is the sampled tick rate, and tick time shows how long each tick took to process. The 50-bot walking run stayed near 20 TPS after the join ramp, with some slow ticks. An earlier live benchmark with 49 connected bots recorded about 14.85–16.44 TPS in its final three loaded samples. Results depend on the workload and server settings. The current release has not been load-tested in these scenarios.
 
-## The pc might have 16gb of ram but the server was using less than 1gb of ram it is coded in rust with no java layer so its very well optimized thats how it can have sutch good culling with very little performance drop.
+### The pc might have 16gb of ram but the server was using less than 1gb of ram it is coded in rust with no java layer so its very well optimized thats how it can have such good culling with very little performance drop.
