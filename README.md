@@ -26,7 +26,7 @@ Direct connections use the DLL's built-in filters. If you use ViaProxy, matching
 
 HorizonGuard is distributed as a compiled Windows plugin. The source is kept private so the protection logic is less straightforward to study and target. A compiled DLL can still be reverse-engineered. HorizonGuard's primary protection is filtering hidden information on the server before it reaches clients, Im doing this to attempt to minamise the bypassability of this plugin to keep servers safe from cheaters finding your base and if your mad your a cheater.
 
-to keep this trusted i will send the sorce code to trusted people to inspect.
+to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
 
