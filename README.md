@@ -4,7 +4,7 @@
 
 1. Download the Windows x64 build from [HorizonX Releases](https://github.com/SaphirePay/HorizonX/releases), extract it, and run `HorizonX.exe`. For a new server, launch Minecraft Java Edition 26.3 once on the host PC, then create a HorizonsX server in the launcher. [HorizonX on GitHub](https://github.com/SaphirePay/HorizonX)
 2. Check that your server has the native `paper_events` component available. HorizonGuard 1.0.28 targets Windows x64 with Minecraft Java Edition 26.3.
-3. Stop the server. Download `HorizonGuard-Native-1.0.29.dll` from the [latest HorizonGuard release](https://github.com/badmasti2/HorizonGuard/releases/latest) and put it in your server's `plugins` folder. If upgrading, replace the previous HorizonGuard Native DLL.
+3. Stop the server. Download `HorizonGuard-Native-1.0.30.dll` from the [latest HorizonGuard release](https://github.com/badmasti2/HorizonGuard/releases/latest) and put it in your server's `plugins` folder. If upgrading, replace the previous HorizonGuard Native DLL.
 4. Start the server. Look for **HorizonGuard Native applied config.yml** in the console. Join with a matching client to check the installation.
 5. Edit `plugins/HorizonGuardNative/config.yml` to change settings. HorizonGuard creates the file automatically and carries over values from an existing `config.cfg`. Save to apply changes while the server is running.
 
@@ -42,3 +42,14 @@ These are whole-server measurements from earlier native development builds. TPS 
 ### The PC might have 16GB of RAM, but the server itself was using less than 1GB. It's written entirely in Rust, with no Java runtime overhead, which helps keep memory usage and performance overhead low.
 
 That's how it can perform such extensive culling with very little performance impact. I know how resource-intensive these types of plugins can be, so I've spent a lot of time optimizing how the system hides information from clients without compromising its effectiveness.
+
+### 1.0.30 surface comparison
+
+One short A/B run on the same PC used seven stationary surface bots in spectator mode and one additional connected player. Both versions ran on the same server with the same settings. The table reports the median of five server snapshots taken two seconds apart after warm-up.
+
+| Version | TPS | Average tick time | 95th-percentile tick time |
+| --- | ---: | ---: | ---: |
+| 1.0.29 | 20.00 | 11.36 ms | 24.98 ms |
+| 1.0.30 | 20.00 | 11.70 ms | 24.41 ms |
+
+Both versions held about 20 TPS. The new build had slightly shorter slow ticks and slightly higher average tick time. This workload did not establish an overall speedup. It did not measure dropped-item load or repeat the earlier 50-bot walking test.
