@@ -12,10 +12,14 @@ Direct connections use the DLL's built-in filters. If you use ViaProxy, matching
 
 ## Features
 
-- **Anti-freecam and base hiding** — Masks concealed underground areas and likely bases separately for each player.
-- **Anti-X-ray and ore ESP** — Hides buried ores and ancient debris until the reveal rules are met.
-- **Storage, spawner, and geode protection** — Masks hidden chests, other containers, spawners, and amethyst markers.
+- **Anti-freecam and base hiding** — Masks concealed underground areas and likely bases separately for each player it does this by searching for something that looks like a base and when there is nobody there or nobody could phsycly see into your base it shows up as deepslate so it doesnt show up on and base finders/freecams
+
+- **Anti-X-ray and ore ESP** — Hides buried ores and ancient debris until the reveal rules are met - sutch as (this is changable) currently touching air (aka vissable to someone not cheating) + other culling to minamize xray
+
+- **Storage, spawner, and geode protection** — Masks hidden chests, other containers, spawners, and amethyst markers This masks storage blocks and amethyst markers as normal blocks so they cant be seen with an esp unless your next to them and there visable by you serverside
+
 - **Overworld surface protection** — Hides underground players from above-ground viewers while keeping the player list.
+
 - **Live configuration** — 70 documented settings for toggles, reveal distances, scan limits, timings, and disguise materials.
 
 ## Why the source is private
