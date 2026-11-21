@@ -30,6 +30,23 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
 
+### Native 1.0.48 — 30-client fresh-terrain test
+
+Thirty scripted spectator clients traveled in separate regions for five minutes after a 30-second warm-up. Ten moved at sprint speed, ten at elytra speed, and ten flew underground. The test used view distance **10**, simulation distance **3**, and a four-chunk-per-player-per-tick send cap. The scripts reproduced travel speeds without running survival or elytra physics.
+
+| Test | HorizonGuard off | HorizonGuard 1.0.48 on |
+| --- | ---: | ---: |
+| Same-seed run, average TPS | 20.0 | 20.0 |
+| Same-seed run, P95 tick time | 48.29 ms | 48.38 ms |
+| Same-seed run, average server CPU | 13.91 logical cores | 14.12 logical cores |
+| Reverse-order repeat, average TPS | 20.0 | 20.0 |
+| Reverse-order repeat, P95 tick time | 67.58 ms | 60.21 ms |
+| Reverse-order repeat, average server CPU | 13.00 logical cores | 13.28 logical cores |
+
+The enabled runs used about **0.21–0.28 additional logical cores** in these paired tests. Windows CPU sampling during one enabled run found **0.31%** of server samples executing inside the HorizonGuard DLL and **0.38%** of sampled server stacks containing it. The paired CPU figures include the rest of the server and vary with generation and chunk delivery. The fastest clients regularly outran chunk delivery with the plugin enabled and disabled.
+
+**Compared with 1.0.47:** Version 1.0.48 reuses event-listener lists for packet dispatch to avoid building a new list per event. On the live server, 1.0.47 and 1.0.48 both averaged **20.0 TPS** on five-minute fresh-terrain runs, with **54.46 ms** and **63.19 ms** P95 tick times respectively. These runs traversed different regions, so they do not establish a version-to-version speedup or regression. Version 1.0.47 already had earlier optimizations and serves as the baseline before this dispatch change.
+
 ### November 21, 2026 — Native 1.0.47, 20-bot flight test
 
 Twenty underground spectator bots flew in different directions for each 60-second run on a Ryzen 7 7800X3D. Server view distance was **10** and simulation distance was **3**.
