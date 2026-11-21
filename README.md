@@ -46,6 +46,14 @@ The walking rerun started 50 clients, and one was kicked by the server's floatin
 
 Version 1.0.46 skips decoding outgoing packets that have no active HorizonGuard filter and rechecks chunk residency before requesting an uncached base-scan tile. All eight unit tests passed.
 
+### Improving server performance
+
+- **Pregenerate your main play area during downtime.** This moves terrain generation and feature placement out of normal play. Players exploring beyond the pregenerated area will still generate chunks. Pregeneration uses disk space, and the server still has to load, tick, and send existing chunks.
+- **Reduce how many chunks the server handles per player.** If TPS dips under load, try lowering server view distance from 10 to 8 while keeping simulation distance at 3. This gives players a shorter view but reduces chunk loading, streaming, and packet filtering. Compare average and 95th-percentile tick time under the same workload before changing another setting.
+- **Choose CPU hardware for the workload.** More fast cores can help HorizonsX when chunk generation and multiple player regions run in parallel. Strong per-core performance still matters for work that must finish on a single thread. A higher core count alone does not guarantee steadier TPS. Test on an equivalent world before buying hardware for this workload.
+
+**How much does HorizonGuard cost?** Both native builds held about 20 TPS with seven stationary surface bots and one additional player. The flight profile identified terrain decoration as the largest contributor to the worst measured tick. Those runs used HorizonGuard throughout, so they do not establish a percentage difference versus running without it. To measure plugin overhead, repeat the same bot routes on an isolated, pregenerated copy with identical settings, once with HorizonGuard enabled and once without it. Compare tick times as well as TPS, since both runs can reach 20 TPS while using different amounts of CPU time.
+
 ### Earlier runs
 
 **Test rig** — AMD Ryzen 7 7800X3D (8 cores, 16 threads), 16 GiB installed RAM, Windows 11 Pro 64-bit. HorizonsX and the test bots ran on the same PC.
