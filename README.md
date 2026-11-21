@@ -3,8 +3,8 @@
 ## Installation guide
 
 1. Download the Windows x64 build from [HorizonX Releases](https://github.com/SaphirePay/HorizonX/releases), extract it, and run `HorizonX.exe`. For a new server, launch Minecraft Java Edition 26.3 once on the host PC, then create a HorizonsX server in the launcher. [HorizonX on GitHub](https://github.com/SaphirePay/HorizonX)
-2. Check that your server has the native `paper_events` component available. HorizonGuard 1.0.28 targets Windows x64 with Minecraft Java Edition 26.3.
-3. Stop the server. Download `HorizonGuard-Native-1.0.30.dll` from the [latest HorizonGuard release](https://github.com/badmasti2/HorizonGuard/releases/latest) and put it in your server's `plugins` folder. If upgrading, replace the previous HorizonGuard Native DLL.
+2. Check that your server has the native `paper_events` component available. HorizonGuard 1.0.47 targets Windows x64 with Minecraft Java Edition 26.3.
+3. Stop the server. Download `HorizonGuard-Native-1.0.47.dll` from the [latest HorizonGuard release](https://github.com/badmasti2/HorizonGuard/releases/latest) and put it in your server's `plugins` folder. If upgrading, replace the previous HorizonGuard Native DLL.
 4. Start the server. Look for **HorizonGuard Native applied config.yml** in the console. Join with a matching client to check the installation.
 5. Edit `plugins/HorizonGuardNative/config.yml` to change settings. HorizonGuard creates the file automatically and carries over values from an existing `config.cfg`. Save to apply changes while the server is running.
 
@@ -18,9 +18,9 @@ Direct connections use the DLL's built-in filters. If you use ViaProxy, matching
 
 - **Storage, spawner, and geode protection** — Masks hidden chests, other containers, spawners, and amethyst markers This masks storage blocks and amethyst markers as normal blocks so they cant be seen with an esp unless your next to them and there visible by you serverside.
 
-- **Overworld surface protection** — Hides underground players from above-ground viewers while keeping the player list.
+- **Overworld surface protection** — Masks eligible terrain below configurable height cutoffs.
 
-- **Live configuration** — 70 documented settings for toggles, reveal distances, scan limits, timings, and disguise materials.
+- **Live configuration** — Documented settings for toggles, reveal distances, scan limits, timings, and disguise materials.
 
 ## Why the source is private
 
@@ -29,6 +29,18 @@ HorizonGuard is distributed as a compiled Windows plugin. The source is kept pri
 to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
+
+### November 21, 2026 — Native 1.0.47, 20-bot flight test
+
+Twenty underground spectator bots flew in different directions for each 60-second run on a Ryzen 7 7800X3D. Server view distance was **10** and simulation distance was **3**.
+
+| Run | TPS | 95th-percentile tick time | Ticks above 50 ms |
+| --- | ---: | ---: | ---: |
+| First pass over the main test routes | 20.00 | 64.58 ms | 131 |
+| Warm pass with a four-chunk-per-player-per-tick send cap | 20.01 | 41.74 ms | 12 |
+| Separate routes requiring fresh generation, same send cap | 20.01 | 43.09 ms | 19 |
+
+Warm-route clients received about **4,760 chunk packets per bot**, compared with about **361 per bot** on fresh routes. The fresh run held TPS while terrain delivery fell behind max-speed flight. The warm route and send cap changed together, so the table does not isolate how much the cap improved timings. The cap is a HorizonsX setting used for the benchmark and is separate from HorizonGuard's background-refresh setting.
 
 ### November 21, 2026 — Native 1.0.45 and 1.0.46
 
