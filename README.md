@@ -30,50 +30,14 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
 
-### Native 1.0.48 — 30-client fresh-terrain test
+Both builds ran the same five-minute, 30-client exploration workload at view distance **10** and simulation distance **3**. Version 1.0.47 is the baseline before the 1.0.48 packet-dispatch optimization.
 
-Thirty scripted spectator clients traveled in separate regions for five minutes after a 30-second warm-up. Ten moved at sprint speed, ten at elytra speed, and ten flew underground. The test used view distance **10**, simulation distance **3**, and a four-chunk-per-player-per-tick send cap. The scripts reproduced travel speeds without running survival or elytra physics.
-
-| Test | HorizonGuard off | HorizonGuard 1.0.48 on |
+| Version | Average TPS | 95th-percentile tick time |
 | --- | ---: | ---: |
-| Same-seed run, average TPS | 20.0 | 20.0 |
-| Same-seed run, P95 tick time | 48.29 ms | 48.38 ms |
-| Same-seed run, average server CPU | 13.91 logical cores | 14.12 logical cores |
-| Reverse-order repeat, average TPS | 20.0 | 20.0 |
-| Reverse-order repeat, P95 tick time | 67.58 ms | 60.21 ms |
-| Reverse-order repeat, average server CPU | 13.00 logical cores | 13.28 logical cores |
+| 1.0.47 | 20.0 | 54.46 ms |
+| 1.0.48 | 20.0 | 63.19 ms |
 
-The enabled runs used about **0.21–0.28 additional logical cores** in these paired tests. Windows CPU sampling during one enabled run found **0.31%** of server samples executing inside the HorizonGuard DLL and **0.38%** of sampled server stacks containing it. The paired CPU figures include the rest of the server and vary with generation and chunk delivery. The fastest clients regularly outran chunk delivery with the plugin enabled and disabled.
-
-**Compared with 1.0.47:** Version 1.0.48 reuses event-listener lists for packet dispatch to avoid building a new list per event. On the live server, 1.0.47 and 1.0.48 both averaged **20.0 TPS** on five-minute fresh-terrain runs, with **54.46 ms** and **63.19 ms** P95 tick times respectively. These runs traversed different regions, so they do not establish a version-to-version speedup or regression. Version 1.0.47 already had earlier optimizations and serves as the baseline before this dispatch change.
-
-### November 21, 2026 — Native 1.0.47, 20-bot flight test
-
-Twenty underground spectator bots flew in different directions for each 60-second run on a Ryzen 7 7800X3D. Server view distance was **10** and simulation distance was **3**.
-
-| Run | TPS | 95th-percentile tick time | Ticks above 50 ms |
-| --- | ---: | ---: | ---: |
-| First pass over the main test routes | 20.00 | 64.58 ms | 131 |
-| Warm pass with a four-chunk-per-player-per-tick send cap | 20.01 | 41.74 ms | 12 |
-| Separate routes requiring fresh generation, same send cap | 20.01 | 43.09 ms | 19 |
-
-Warm-route clients received about **4,760 chunk packets per bot**, compared with about **361 per bot** on fresh routes. The fresh run held TPS while terrain delivery fell behind max-speed flight. The warm route and send cap changed together, so the table does not isolate how much the cap improved timings. The cap is a HorizonsX setting used for the benchmark and is separate from HorizonGuard's background-refresh setting.
-
-### November 21, 2026 — Native 1.0.45 and 1.0.46
-
-Live-server runs used the test rig below, a view distance of 10, a simulation distance of 3, and one additional connected player. The figures measure the whole server.
-
-| Workload | 1.0.45 TPS | 1.0.46 TPS | Average tick time (1.0.45 → 1.0.46) |
-| --- | ---: | ---: | ---: |
-| Seven stationary surface bots | 20.00 | 20.00 | 9.87 → 10.74 ms, then 10.94 → 10.38 ms in reverse order |
-| Walking clients during the final loaded samples | 14.82–18.04 (50 connected) | 16.09–19.88 (49 connected) | 55.40–67.03 → 50.23–61.76 ms |
-| Ten underground spectator bots, 60-second server report | 10.93 | 18.54 | 90.62 → 47.16 ms |
-
-The surface figures are medians from seven snapshots per build and pass. The reverse pass measured median CPU use of 0.82 → 0.70 logical cores and resident memory of 1,034 → 1,028 MiB. The two test orders disagree on the direction of the tick-time change, so the surface runs do not establish a speedup. Windows exposed no GPU engine counters for the dedicated game process during the sampled surface and flight intervals.
-
-The walking rerun started 50 clients, and one was kicked by the server's floating check. The game process reached about 2.9 GiB resident memory in sampled walking intervals as loaded chunks grew to about 32,000. The flight rerun reused the same route after the first pass generated terrain. Terrain decoration accounted for about 2.08 seconds of the worst tick on the first flight pass, and the timing difference cannot be isolated to the plugin.
-
-Version 1.0.46 skips decoding outgoing packets that have no active HorizonGuard filter and rechecks chunk residency before requesting an uncached base-scan tile. All eight unit tests passed.
+The runs explored different fresh regions, so the tick-time difference does not establish a slowdown or speedup from the plugin change. In a separate CPU trace of 1.0.48 under load, **0.31% of sampled server CPU time** was inside HorizonGuard’s DLL.
 
 ### Improving server performance
 
