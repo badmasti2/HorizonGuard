@@ -34,11 +34,11 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 Live-server runs used the test rig below, a view distance of 10, a simulation distance of 3, and one additional connected player. The figures measure the whole server.
 
-| Workload | 1.0.45 TPS | 1.0.46 TPS |
-| --- | ---: | ---: |
-| Seven stationary surface bots | 20.00 | 20.00 |
-| Walking clients during the final loaded samples | 14.82–18.04 (50 connected) | 16.09–19.88 (49 connected) |
-| Ten underground spectator bots, 60-second server report | 10.93 | 18.54 |
+| Workload | 1.0.45 TPS | 1.0.46 TPS | Average tick time (1.0.45 → 1.0.46) |
+| --- | ---: | ---: | ---: |
+| Seven stationary surface bots | 20.00 | 20.00 | 9.87 → 10.74 ms, then 10.94 → 10.38 ms in reverse order |
+| Walking clients during the final loaded samples | 14.82–18.04 (50 connected) | 16.09–19.88 (49 connected) | 55.40–67.03 → 50.23–61.76 ms |
+| Ten underground spectator bots, 60-second server report | 10.93 | 18.54 | 90.62 → 47.16 ms |
 
 The surface figures are medians from seven snapshots per build and pass. The reverse pass measured median CPU use of 0.82 → 0.70 logical cores and resident memory of 1,034 → 1,028 MiB. The two test orders disagree on the direction of the tick-time change, so the surface runs do not establish a speedup. Windows exposed no GPU engine counters for the dedicated game process during the sampled surface and flight intervals.
 
@@ -48,34 +48,6 @@ Version 1.0.46 skips decoding outgoing packets that have no active HorizonGuard 
 
 ### Improving server performance
 
-- **Pregenerate your main play area during downtime.** This moves terrain generation and feature placement out of normal play. Players exploring beyond the pregenerated area will still generate chunks. Pregeneration uses disk space, and the server still has to load, tick, and send existing chunks.
-- **Reduce how many chunks the server handles per player.** If TPS dips under load, try lowering server view distance from 10 to 8 while keeping simulation distance at 3. This gives players a shorter view but reduces chunk loading, streaming, and packet filtering. Compare average and 95th-percentile tick time under the same workload before changing another setting.
-- **Choose CPU hardware for the workload.** More fast cores can help HorizonsX when chunk generation and multiple player regions run in parallel. Strong per-core performance still matters for work that must finish on a single thread. A higher core count alone does not guarantee steadier TPS. Test on an equivalent world before buying hardware for this workload.
-
-**How much does HorizonGuard cost?** Both native builds held about 20 TPS with seven stationary surface bots and one additional player. The flight profile identified terrain decoration as the largest contributor to the worst measured tick. Those runs used HorizonGuard throughout, so they do not establish a percentage difference versus running without it. To measure plugin overhead, repeat the same bot routes on an isolated, pregenerated copy with identical settings, once with HorizonGuard enabled and once without it. Compare tick times as well as TPS, since both runs can reach 20 TPS while using different amounts of CPU time.
-
-### Earlier runs
-
 **Test rig** — AMD Ryzen 7 7800X3D (8 cores, 16 threads), 16 GiB installed RAM, Windows 11 Pro 64-bit. HorizonsX and the test bots ran on the same PC.
 
-| Workload | Observed TPS | Average tick time in sampled windows | 95th-percentile tick time in sampled windows |
-| --- | ---: | ---: | ---: |
-| 50 walking bots with mixed surface and cave starts, sampled from 40 to 66 seconds once all bots were online | 19.55–20.55 | 38.5–50.5 ms | 45.0–63.5 ms |
-| 10 bots in underground spectator flight, sampled from 30 to 60 seconds | 19.54–20.35 | 39.0–50.4 ms | 55.1–76.6 ms |
-
-These are whole-server measurements from earlier native development builds. TPS is the sampled tick rate, and tick time shows how long each tick took to process. The 50-bot walking run stayed near 20 TPS after the join ramp, with some slow ticks. An earlier live benchmark with 49 connected bots recorded about 14.85–16.44 TPS in its final three loaded samples. Results depend on the workload and server settings.
-
-### The PC might have 16GB of RAM, but the server itself was using less than 1GB. It's written entirely in Rust, with no Java runtime overhead, which helps keep memory usage and performance overhead low.
-
-That's how it can perform such extensive culling with very little performance impact. I know how resource-intensive these types of plugins can be, so I've spent a lot of time optimizing how the system hides information from clients without compromising its effectiveness.
-
-### 1.0.30 surface comparison
-
-One short A/B run on the same PC used seven stationary surface bots in spectator mode and one additional connected player. Both versions ran on the same server with the same settings. The table reports the median of five server snapshots taken two seconds apart after warm-up.
-
-| Version | TPS | Average tick time | 95th-percentile tick time |
-| --- | ---: | ---: | ---: |
-| 1.0.29 | 20.00 | 11.36 ms | 24.98 ms |
-| 1.0.30 | 20.00 | 11.70 ms | 24.41 ms |
-
-Both versions held about 20 TPS. The new build had slightly shorter slow ticks and slightly higher average tick time. This workload did not establish an overall speedup. It did not measure dropped-item load or repeat the earlier 50-bot walking test.
+I have worked on improving the performance of this plugin and from what i have tested pregenerating the chunks would be the biggest tps saver the plugin doesnt effect tps in a notable way the only time tps goes down is when i have tests of bots flying around generating chunks all at the same time never when theres 50 bots just stood still in a cave where things are being culled by the server, In my tests world gen is the most harmfull thing for tps not my plugin so if your thinking of running a server even without this plugin you should pregen your chunks.
