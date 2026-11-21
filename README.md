@@ -30,6 +30,24 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
 
+### November 21, 2026 — Native 1.0.45 and 1.0.46
+
+Live-server runs used the test rig below, a view distance of 10, a simulation distance of 3, and one additional connected player. The figures measure the whole server.
+
+| Workload | 1.0.45 TPS | 1.0.46 TPS | Average tick time (1.0.45 → 1.0.46) |
+| --- | ---: | ---: | ---: |
+| Seven stationary surface bots | 20.00 | 20.00 | 9.87 → 10.74 ms, then 10.94 → 10.38 ms in reverse order |
+| Walking clients during the final loaded samples | 14.82–18.04 (50 connected) | 16.09–19.88 (49 connected) | 55.40–67.03 → 50.23–61.76 ms |
+| Ten underground spectator bots, 60-second server report | 10.93 | 18.54 | 90.62 → 47.16 ms |
+
+The surface figures are medians from seven snapshots per build and pass. The reverse pass measured median CPU use of 0.82 → 0.70 logical cores and resident memory of 1,034 → 1,028 MiB. The two test orders disagree on the direction of the tick-time change, so the surface runs do not establish a speedup. Windows exposed no GPU engine counters for the dedicated game process during the sampled surface and flight intervals.
+
+The walking rerun started 50 clients, and one was kicked by the server's floating check. The game process reached about 2.9 GiB resident memory in sampled walking intervals as loaded chunks grew to about 32,000. The flight rerun reused the same route after the first pass generated terrain. Terrain decoration accounted for about 2.08 seconds of the worst tick on the first flight pass, and the timing difference cannot be isolated to the plugin.
+
+Version 1.0.46 skips decoding outgoing packets that have no active HorizonGuard filter and rechecks chunk residency before requesting an uncached base-scan tile. All eight unit tests passed.
+
+### Earlier runs
+
 **Test rig** — AMD Ryzen 7 7800X3D (8 cores, 16 threads), 16 GiB installed RAM, Windows 11 Pro 64-bit. HorizonsX and the test bots ran on the same PC.
 
 | Workload | Observed TPS | Average tick time in sampled windows | 95th-percentile tick time in sampled windows |
@@ -37,7 +55,7 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 | 50 walking bots with mixed surface and cave starts, sampled from 40 to 66 seconds once all bots were online | 19.55–20.55 | 38.5–50.5 ms | 45.0–63.5 ms |
 | 10 bots in underground spectator flight, sampled from 30 to 60 seconds | 19.54–20.35 | 39.0–50.4 ms | 55.1–76.6 ms |
 
-These are whole-server measurements from earlier native development builds. TPS is the sampled tick rate, and tick time shows how long each tick took to process. The 50-bot walking run stayed near 20 TPS after the join ramp, with some slow ticks. An earlier live benchmark with 49 connected bots recorded about 14.85–16.44 TPS in its final three loaded samples. Results depend on the workload and server settings. The current release has not been load-tested in these scenarios.
+These are whole-server measurements from earlier native development builds. TPS is the sampled tick rate, and tick time shows how long each tick took to process. The 50-bot walking run stayed near 20 TPS after the join ramp, with some slow ticks. An earlier live benchmark with 49 connected bots recorded about 14.85–16.44 TPS in its final three loaded samples. Results depend on the workload and server settings.
 
 ### The PC might have 16GB of RAM, but the server itself was using less than 1GB. It's written entirely in Rust, with no Java runtime overhead, which helps keep memory usage and performance overhead low.
 
