@@ -34,11 +34,11 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 Live-server runs used the test rig below, a view distance of 10, a simulation distance of 3, and one additional connected player. The figures measure the whole server.
 
-| Workload | 1.0.45 TPS | 1.0.46 TPS | Average tick time (1.0.45 → 1.0.46) |
-| --- | ---: | ---: | ---: |
-| Seven stationary surface bots | 20.00 | 20.00 | 9.87 → 10.74 ms, then 10.94 → 10.38 ms in reverse order |
-| Walking clients during the final loaded samples | 14.82–18.04 (50 connected) | 16.09–19.88 (49 connected) | 55.40–67.03 → 50.23–61.76 ms |
-| Ten underground spectator bots, 60-second server report | 10.93 | 18.54 | 90.62 → 47.16 ms |
+| Workload | 1.0.45 TPS | 1.0.46 TPS |
+| --- | ---: | ---: |
+| Seven stationary surface bots | 20.00 | 20.00 |
+| Walking clients during the final loaded samples | 14.82–18.04 (50 connected) | 16.09–19.88 (49 connected) |
+| Ten underground spectator bots, 60-second server report | 10.93 | 18.54 |
 
 The surface figures are medians from seven snapshots per build and pass. The reverse pass measured median CPU use of 0.82 → 0.70 logical cores and resident memory of 1,034 → 1,028 MiB. The two test orders disagree on the direction of the tick-time change, so the surface runs do not establish a speedup. Windows exposed no GPU engine counters for the dedicated game process during the sampled surface and flight intervals.
 
