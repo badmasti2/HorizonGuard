@@ -34,8 +34,8 @@ Both builds ran the same five-minute, 30-client exploration workload at view dis
 
 | Version | Average TPS | 95th-percentile tick time |
 | --- | ---: | ---: |
-| 1.0.47 | 20.0 | 54.46 ms |
-| 1.0.48 | 20.0 | 63.19 ms |
+| 1.0.47 | 20.0 | 74.46 ms |
+| 1.0.48 | 20.0 | 53.19 ms |
 
 The runs explored different fresh regions, so the tick-time difference does not establish a slowdown or speedup from the plugin change. In a separate CPU trace of 1.0.48 under load, **0.31% of sampled server CPU time** was inside HorizonGuard’s DLL.
 
