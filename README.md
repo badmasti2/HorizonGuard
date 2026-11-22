@@ -34,6 +34,31 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 #### HorizonGuard has a small performance cost under extreme testing conditions. It makes base-finding and xray cheats far less effective while keeping gameplay as close to vanilla as possible.
 
+### Latest 1.0.58 optimization benchmarks (before vs. after)
+
+These tests compare the **previous HorizonGuard build against the optimized 1.0.58 build**, with HorizonGuard enabled in both. They do **not** measure plugin-on versus plugin-off overhead.
+
+Each workload ran for **five minutes after staggered joins and warm-up**, with clients occupying separate chunks. The mixed run had **22 stationary underground, 22 stationary above ground, and 22 moving through pre-generated terrain**; all 22 moving routes were checked against **1,600 saved chunks**. The reported values are medians from the sustained measurement windows, not join-time performance.
+
+| Five-minute workload | TPS before | TPS after | Median tick time before | Median tick time after | Tick-time change |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 50 stationary above ground | 20.00 | 20.00 | 7.88 ms | 7.95 ms | +0.9% |
+| 50 stationary underground | 20.01 | 20.00 | 16.60 ms | 9.66 ms | **41.8% lower** |
+| 66 mixed (22 underground, 22 above ground, 22 moving) | 19.96 | 20.00 | 11.82 ms | 10.15 ms | **14.1% lower** |
+
+For the 50-client underground workload, median server CPU use also fell from **0.49 to 0.33 equivalent cores** (about **32.7% lower**). The small surface tick-time increase is not enough on its own to establish a meaningful regression. All **17 automated tests passed**. These are simulated-client workloads; they do not establish performance with the same number of real players performing arbitrary gameplay actions.
+
+#### What changed in optimized 1.0.58
+
+- **Batch nearby block reads** instead of repeatedly querying individual positions.
+- **Cache collision facts by block state** to avoid repeating equivalent calculations.
+- **Invalidate cached positions when blocks change** to keep visibility decisions current.
+- **Reuse player position and configuration data** during visibility checks.
+- **Batch nearby chest reveals** to reduce repeated work and packet handling.
+- **Skip effect parsing for unrelated packets** to avoid unnecessary processing.
+
+The shared safety cap remains **300,000 block-fact queries per rolling 10 seconds**, configurable in `plugins/HorizonGuardNative/config.yml`. The optimization reduces query demand before the cap is reached; the cap is not a benchmark result. The optimized 1.0.58 DLL and this cap setting were applied to `my-server` after testing.
+
 ### HorizonsX without HorizonGuard vs. optimized 1.0.58
 
 Six protocol clients on the same Ryzen 7 7800X3D host, with view distance 10, simulation distance 3, and fresh worlds from the same seed. The baseline uses the same HorizonsX engine with the plugin directory empty. The moving workload has two clients at running speed, two at elytra speed, and two underground spectators in separate regions.
