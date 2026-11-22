@@ -32,7 +32,7 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
 
-#### HorizonGuard has a small performance cost under extreme testing conditions. It makes base-finding cheats far less effective while keeping gameplay as close to vanilla as possible.
+#### HorizonGuard has a small performance cost under extreme testing conditions. It makes base-finding and xray cheats far less effective while keeping gameplay as close to vanilla as possible.
 
 ### HorizonsX without HorizonGuard vs. optimized 1.0.58
 
