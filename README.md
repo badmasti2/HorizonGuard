@@ -47,7 +47,7 @@ Six protocol clients on the same Ryzen 7 7800X3D host, with view distance 10, si
 | Stationary | 20.00 | 20.00 | 0.26 → 0.44 | 630 → 724 MiB |
 | Moving into new chunks | 20.01 | 18.66 | 11.63 → 11.35 | 793 → 840 MiB |
 
-These are whole-server medians from the last three stationary samples and all five moving samples. The no-plugin baseline ran separately from the earlier optimized run. The difference is a workload observation, and a single run per configuration cannot give a repeatable estimate of plugin overhead.
+These are whole-server medians from the last three stationary samples and all five moving samples. The no-plugin baseline ran separately from the optimized 1.0.58 run. Both stationary tests maintained 20 TPS. During fresh-chunk exploration, the plugin-on run measured 18.66 TPS versus 20.01 without the plugin (about 6.7% lower), while CPU use was slightly lower and resident memory was 47 MiB higher. Because there was only one run per configuration, this is an observed difference, not a repeatable estimate of HorizonGuard overhead. Repeated alternating on/off runs would help establish how much of the difference is consistent.
 
 
 Both builds ran the same five-minute, 30-client exploration workload at view distance **10** and simulation distance **3**. Version 1.0.47 is the baseline before the 1.0.48 packet-dispatch optimization.
@@ -57,10 +57,12 @@ Both builds ran the same five-minute, 30-client exploration workload at view dis
 | 1.0.47 | 20.0 | 74.46 ms |
 | 1.0.48 | 20.0 | 53.19 ms |
 
-The runs explored different fresh regions, so the tick-time difference does not establish a slowdown or speedup from the plugin change. In a separate CPU trace of 1.0.48 under load, **0.31% of sampled server CPU time** was inside HorizonGuard’s DLL The plugin horizon guard was using 0.31% of my cpu in a extreme test so im sure any server would be able to run it its very light weight but very powerfull.
+The runs explored different fresh regions, so the tick-time difference does not establish a slowdown or speedup from the plugin change. In a separate CPU trace of 1.0.48 under load, **0.31% of sampled server CPU time** was attributed directly to HorizonGuard’s DLL. This is a low sampled share for that workload, but it is not the same as total plugin overhead: work triggered elsewhere in the server may not appear inside the DLL, and results may differ on other hardware or player workloads.
 
 ### Improving server performance
 
 **Test rig** — AMD Ryzen 7 7800X3D (8 cores, 16 threads), 16 GiB installed RAM, Windows 11 Pro 64-bit. HorizonsX and the test bots ran on the same PC.
 
-I have worked on improving the performance of this plugin and from what i have tested pregenerating the chunks would be the biggest tps saver the plugin doesnt effect tps in a notable way the only time tps goes down is when i have tests of bots flying around generating chunks all at the same time never when theres 50 bots just stood still in a cave where things are being culled by the server, In my tests world gen is the most harmfull thing for tps not my plugin so if your thinking of running a server even without this plugin you should pregen your chunks.
+My tests suggest that **fresh chunk generation is a major source of server load**. Stationary clients, including earlier tests with 50 bots standing in a cave, maintained full TPS, while groups exploring new terrain at high speed placed much more demand on the server. The six-client no-plugin comparison also showed a TPS difference during fresh-chunk exploration, so I cannot claim HorizonGuard has zero impact in that workload.
+
+**Recommendation:** Pre-generate the areas players are likely to explore where practical, whether or not you use HorizonGuard. This reduces live terrain-generation work and should help server performance, although it does not remove all chunk-loading or packet-processing costs. A repeat test on pre-generated terrain would help separate those costs from world generation.
