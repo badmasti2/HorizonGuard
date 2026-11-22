@@ -40,11 +40,16 @@ These tests compare the **previous HorizonGuard build against the optimized 1.0.
 
 Each workload ran for **five minutes after staggered joins and warm-up**, with clients occupying separate chunks. The mixed run had **22 stationary underground, 22 stationary above ground, and 22 moving through pre-generated terrain**; all 22 moving routes were checked against **1,600 saved chunks**. The reported values are medians from the sustained measurement windows, not join-time performance.
 
-| Five-minute workload | TPS before | TPS after | Median tick time before | Median tick time after | Tick-time change |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 50 stationary above ground | 20.00 | 20.00 | 7.88 ms | 7.95 ms | +0.9% |
-| 50 stationary underground | 20.01 | 20.00 | 16.60 ms | 9.66 ms | **41.8% lower** |
-| 66 mixed (22 underground, 22 above ground, 22 moving) | 19.96 | 20.00 | 11.82 ms | 10.15 ms | **14.1% lower** |
+| Metric | 50 above ground | 50 underground | 66 mixed* |
+| --- | ---: | ---: | ---: |
+| **TPS before** | 20.00 | 20.01 | 19.96 |
+| **TPS after** | 20.00 | 20.00 | 20.00 |
+| Median tick time before | 7.88 ms | 16.60 ms | 11.82 ms |
+| Median tick time after | 7.95 ms | 9.66 ms | 10.15 ms |
+| Tick-time change | +0.9% | **41.8% lower** | **14.1% lower** |
+
+*66 mixed = 22 underground, 22 above ground, and 22 moving clients.*
+
 
 For the 50-client underground workload, median server CPU use also fell from **0.49 to 0.33 equivalent cores** (about **32.7% lower**). The small surface tick-time increase is not enough on its own to establish a meaningful regression. All **17 automated tests passed**. These are simulated-client workloads; they do not establish performance with the same number of real players performing arbitrary gameplay actions.
 
