@@ -43,10 +43,10 @@ Each workload ran for **five minutes after staggered joins and warm-up**, with c
 | Metric | 50 above ground | 50 underground | 66 mixed* |
 | --- | ---: | ---: | ---: |
 | **TPS before** | 20.00 | 20.01 | 19.96 |
-| **TPS after** | 20.00 | 20.00 | 20.00 |
+| **TPS v1.0.58** | 20.00 | 20.00 | 20.00 |
 | Median tick time before | 7.88 ms | 16.60 ms | 11.82 ms |
-| Median tick time after | 7.95 ms | 9.66 ms | 10.15 ms |
-| Tick-time change | +0.9% | **41.8% lower** | **14.1% lower** |
+| Median tick time v1.0.58 | 7.95 ms | 9.66 ms | 10.15 ms |
+| Tick-time v1.0.58 | +0.9% | **41.8% lower** | **14.1% lower** |
 
 *66 mixed = 22 underground, 22 above ground, and 22 moving clients.*
 
