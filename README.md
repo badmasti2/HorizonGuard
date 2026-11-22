@@ -1,6 +1,6 @@
 # HorizonGuard Native|
 
-### its in a working relese state but if you experence any bugs report it to me and il fix it i hasent had alot of gameplay testing.
+### I have done lots of testing and optimized and fixed alot of bugs this is now perfectly usable with near 0 bugs that i know of.
 
 ## Installation guide
 
