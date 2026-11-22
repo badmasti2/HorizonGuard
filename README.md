@@ -32,6 +32,8 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
 
+#### HorizonGuard has a small performance cost under extreme testing conditions. It makes base-finding cheats far less effective while keeping gameplay as close to vanilla as possible.
+
 ### HorizonsX without HorizonGuard vs. optimized 1.0.58
 
 Six protocol clients on the same Ryzen 7 7800X3D host, with view distance 10, simulation distance 3, and fresh worlds from the same seed. The baseline uses the same HorizonsX engine with the plugin directory empty. The moving workload has two clients at running speed, two at elytra speed, and two underground spectators in separate regions.
