@@ -36,6 +36,12 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 Six protocol clients on the same Ryzen 7 7800X3D host, with view distance 10, simulation distance 3, and fresh worlds from the same seed. The baseline uses the same HorizonsX engine with the plugin directory empty. The moving workload has two clients at running speed, two at elytra speed, and two underground spectators in separate regions.
 
+**What the six-client tests did**
+
+- **Stationary.** Six spectator protocol clients joined, were teleported to six starting positions around a 4,000-block-radius circle, and held still while the server loaded their surrounding chunks. The reported result uses the final three samples after the initial warm-up.
+- **Moving into new chunks.** The same clients moved simultaneously in separate directions from those positions. Two followed a straight route at running speed (about 5.6 blocks/s, starting at Y110), two followed an undulating route at elytra speed (30 blocks/s, starting at Y165), and two travelled underground at spectator speed (about 44.4 blocks/s at Y−32). Spectator mode let the clients follow repeatable routes without terrain collisions. These are scripted movement speeds, not six survival players.
+- **How we measured.** Each phase warmed up for about 10 seconds before five samples spaced roughly two seconds apart. The table reports median server TPS, CPU use in equivalent logical cores, and resident process memory. The comparison used fresh worlds with the same seed and the same view and simulation distances. The only intended configuration difference was whether HorizonGuard was installed.
+
 | Workload | No plugin TPS | HorizonGuard TPS | CPU cores used (off → on) | Resident memory (off → on) |
 | --- | ---: | ---: | ---: | ---: |
 | Stationary | 20.00 | 20.00 | 0.26 → 0.44 | 630 → 724 MiB |
