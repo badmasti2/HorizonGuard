@@ -42,10 +42,12 @@ Six protocol clients on the same Ryzen 7 7800X3D host, with view distance 10, si
 - **Moving into new chunks.** The same clients moved simultaneously in separate directions from those positions. Two followed a straight route at running speed (about 5.6 blocks/s, starting at Y110), two followed an undulating route at elytra speed (30 blocks/s, starting at Y165), and two travelled underground at spectator speed (about 44.4 blocks/s at Y−32). Spectator mode let the clients follow repeatable routes without terrain collisions. These are scripted movement speeds, not six survival players.
 - **How we measured.** Each phase warmed up for about 10 seconds before five samples spaced roughly two seconds apart. The table reports median server TPS, CPU use in equivalent logical cores, and resident process memory. The comparison used fresh worlds with the same seed and the same view and simulation distances. The only intended configuration difference was whether HorizonGuard was installed.
 
-| Workload | No plugin TPS | HorizonGuard TPS | CPU cores used (off → on) | Resident memory (off → on) |
-| --- | ---: | ---: | ---: | ---: |
-| Stationary | 20.00 | 20.00 | 0.26 → 0.44 | 630 → 724 MiB |
-| Moving into new chunks | 20.01 | 18.66 | 11.63 → 11.35 | 793 → 840 MiB |
+| Workload | Configuration | TPS | CPU cores used | RAM used |
+| --- | --- | ---: | ---: | ---: |
+| Stationary | No plugin | 20.00 | 0.26 | 630 MiB |
+| Stationary | HorizonGuard | 20.00 | 0.44 | 724 MiB |
+| Moving into new chunks | No plugin | 20.01 | 11.63 | 793 MiB |
+| Moving into new chunks | HorizonGuard | 18.66 | 11.35 | 840 MiB |
 
 These are whole-server medians from the last three stationary samples and all five moving samples. The no-plugin baseline ran separately from the optimized 1.0.58 run. Both stationary tests maintained 20 TPS. During fresh-chunk exploration, the plugin-on run measured 18.66 TPS versus 20.01 without the plugin (about 6.7% lower), while CPU use was slightly lower and resident memory was 47 MiB higher. Because there was only one run per configuration, this is an observed difference, not a repeatable estimate of HorizonGuard overhead. Repeated alternating on/off runs would help establish how much of the difference is consistent.
 
