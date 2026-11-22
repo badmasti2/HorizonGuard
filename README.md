@@ -32,6 +32,18 @@ to keep this trusted i will send the Source code to trusted people to inspect.
 
 ## Performance testing
 
+### HorizonsX without HorizonGuard vs. optimized 1.0.58
+
+Six protocol clients on the same Ryzen 7 7800X3D host, with view distance 10, simulation distance 3, and fresh worlds from the same seed. The baseline uses the same HorizonsX engine with the plugin directory empty. The moving workload has two clients at running speed, two at elytra speed, and two underground spectators in separate regions.
+
+| Workload | No plugin TPS | HorizonGuard TPS | CPU cores used (off → on) | Resident memory (off → on) |
+| --- | ---: | ---: | ---: | ---: |
+| Stationary | 20.00 | 20.00 | 0.26 → 0.44 | 630 → 724 MiB |
+| Moving into new chunks | 20.01 | 18.66 | 11.63 → 11.35 | 793 → 840 MiB |
+
+These are whole-server medians from the last three stationary samples and all five moving samples. The no-plugin baseline ran separately from the earlier optimized run. The difference is a workload observation, and a single run per configuration cannot give a repeatable estimate of plugin overhead.
+
+
 Both builds ran the same five-minute, 30-client exploration workload at view distance **10** and simulation distance **3**. Version 1.0.47 is the baseline before the 1.0.48 packet-dispatch optimization.
 
 | Version | Average TPS | 95th-percentile tick time |
