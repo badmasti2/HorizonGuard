@@ -2,6 +2,8 @@
 
 Native anti-ESP, anti-X-ray, and base-concealment plugin for HorizonsX.
 
+# in testing a plugin can effect the chunk hiding im not sure witch one keep that in mind.
+
 ## Installation guide
 
 1. Download the Windows x64 build from [HorizonX Releases](https://github.com/SaphirePay/HorizonX/releases), extract it, and run `HorizonX.exe`. For a new server, launch Minecraft Java Edition 26.3 once on the host PC, then create a HorizonsX server in the launcher. [HorizonX on GitHub](https://github.com/SaphirePay/HorizonX)
