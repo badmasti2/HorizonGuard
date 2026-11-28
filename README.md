@@ -2,7 +2,7 @@
 
 Native anti-ESP, anti-X-ray, and base-concealment plugin for HorizonsX.
 
-# in testing a plugin can effect the chunk hiding im not sure witch one keep that in mind.
+### in testing a plugin can effect the chunk hiding im not sure witch one keep that in mind.
 
 ## Installation guide
 
